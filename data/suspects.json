@@ -1,0 +1,29 @@
+[
+    {
+        "id": "s1",
+        "name": "Carmen la Roja",
+        "gender": "Femenino",
+        "hair": "Rojo",
+        "vehicle": "Deportivo",
+        "hobby": "Tenis",
+        "feature": "Gafas de sol"
+    },
+    {
+        "id": "s2",
+        "name": "Pepe 'Manos de Plata'",
+        "gender": "Masculino",
+        "hair": "Negro",
+        "vehicle": "Motocicleta",
+        "hobby": "Coleccionista de monedas",
+        "feature": "Cicatriz"
+    },
+    {
+        "id": "s3",
+        "name": "Lola 'La Sombra'",
+        "gender": "Femenino",
+        "hair": "Rubio",
+        "vehicle": "Limusina",
+        "hobby": "Ajedrez",
+        "feature": "Sombrero"
+    }
+]

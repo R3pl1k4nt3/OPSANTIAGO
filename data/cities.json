@@ -1,0 +1,121 @@
+[
+    {
+        "id": "madrid",
+        "name": "Madrid",
+        "region": "Comunidad de Madrid",
+        "places": ["Museo del Prado", "Palacio Real", "Parque del Retiro"],
+        "description": "La capital de España, famosa por sus museos y su vibrante vida."
+    },
+    {
+        "id": "barcelona",
+        "name": "Barcelona",
+        "region": "Cataluña",
+        "places": ["Sagrada Familia", "Parque Güell", "La Rambla"],
+        "description": "Ciudad cosmopolita conocida por su arte y arquitectura modernista."
+    },
+    {
+        "id": "valencia",
+        "name": "Valencia",
+        "region": "Comunidad Valenciana",
+        "places": ["Ciudad de las Artes", "La Lonja", "Playa de la Malvarrosa"],
+        "description": "Conocida por las Fallas y como la cuna de la paella."
+    },
+    {
+        "id": "sevilla",
+        "name": "Sevilla",
+        "region": "Andalucía",
+        "places": ["Plaza de España", "La Giralda", "Real Alcázar"],
+        "description": "Famosa por su baile flamenco y diseños arquitectónicos árabes."
+    },
+    {
+        "id": "zaragoza",
+        "name": "Zaragoza",
+        "region": "Aragón",
+        "places": ["Basílica del Pilar", "Palacio de la Aljafería", "La Seo"],
+        "description": "Ciudad a orillas del río Ebro, con un gran legado romano y mudéjar."
+    },
+    {
+        "id": "palma",
+        "name": "Palma",
+        "region": "Islas Baleares",
+        "places": ["Catedral de Santa María", "Castillo de Bellver", "Palacio Real de La Almudaina"],
+        "description": "Capital balear, conocida por sus playas y la imponente Seu mirando al mar."
+    },
+    {
+        "id": "las_palmas",
+        "name": "Las Palmas de Gran Canaria",
+        "region": "Canarias",
+        "places": ["Playa de las Canteras", "Casa de Colón", "Catedral de Santa Ana"],
+        "description": "Ciudad atlántica con gran herencia colonial y clima primaveral todo el año."
+    },
+    {
+        "id": "santander",
+        "name": "Santander",
+        "region": "Cantabria",
+        "places": ["Palacio de la Magdalena", "Centro Botín", "Playa del Sardinero"],
+        "description": "Elegante ciudad costera rodeada de mar y montañas en el norte peninsular."
+    },
+    {
+        "id": "toledo",
+        "name": "Toledo",
+        "region": "Castilla-La Mancha",
+        "places": ["Alcázar", "Catedral Primada", "Sinagoga del Tránsito"],
+        "description": "La ciudad de las tres culturas, con un casco histórico medieval laberíntico."
+    },
+    {
+        "id": "valladolid",
+        "name": "Valladolid",
+        "region": "Castilla y León",
+        "places": ["Plaza Mayor", "Museo Nacional de Escultura", "Iglesia de San Pablo"],
+        "description": "Antigua capital de la corte española, con una gran riqueza monumental."
+    },
+    {
+        "id": "merida",
+        "name": "Mérida",
+        "region": "Extremadura",
+        "places": ["Teatro Romano", "Templo de Diana", "Acueducto de los Milagros"],
+        "description": "Heredera del Imperio Romano, conserva un conjunto arqueológico excepcional."
+    },
+    {
+        "id": "santiago",
+        "name": "Santiago de Compostela",
+        "region": "Galicia",
+        "places": ["Catedral", "Plaza del Obradoiro", "Mercado de Abastos"],
+        "description": "Destino final de peregrinación y capital gallega, famosa por su lluvia mágica."
+    },
+    {
+        "id": "logrono",
+        "name": "Logroño",
+        "region": "La Rioja",
+        "places": ["Calle Laurel", "Concatedral de Santa María de la Redonda", "Puente de Piedra"],
+        "description": "Centro vinícola de la región, famosa por su gastronomía y tapeo."
+    },
+    {
+        "id": "pamplona",
+        "name": "Pamplona",
+        "region": "Navarra",
+        "places": ["Plaza del Castillo", "Catedral de Santa María", "Ciudadela"],
+        "description": "Mundialmente conocida por los Sanfermines y sus fortificaciones renacentenses."
+    },
+    {
+        "id": "vitoria",
+        "name": "Vitoria-Gasteiz",
+        "region": "País Vasco",
+        "places": ["Catedral de Santa María", "Plaza de la Virgen Blanca", "Anillo Verde"],
+        "description": "Capital verde europea, destaca por su urbanismo sostenible y casco antiguo."
+    },
+    {
+        "id": "murcia",
+        "name": "Murcia",
+        "region": "Región de Murcia",
+        "places": ["Catedral de Murcia", "Real Casino", "Santuario de la Fuensanta"],
+        "description": "Conocida como la huerta de Europa, con un rico patrimonio barroco."
+    },
+    {
+        "id": "oviedo",
+        "name": "Oviedo",
+        "region": "Principado de Asturias",
+        "places": ["Catedral de San Salvador", "Santa María del Naranco", "Teatro Campoamor"],
+        "description": "Ciudad señorial y prerrománica, famosa por los Premios Princesa de Asturias."
+    }
+]
