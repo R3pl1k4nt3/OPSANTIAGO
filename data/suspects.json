@@ -4,26 +4,87 @@
         "name": "Carmen la Roja",
         "gender": "Femenino",
         "hair": "Rojo",
+        "clothing": "Gabardina escarlata",
         "vehicle": "Deportivo",
         "hobby": "Tenis",
-        "feature": "Gafas de sol"
+        "food": "Paella",
+        "feature": "Gafas de sol gigantes"
     },
     {
         "id": "s2",
         "name": "Pepe 'Manos de Plata'",
         "gender": "Masculino",
         "hair": "Negro",
+        "clothing": "Traje a rayas",
         "vehicle": "Motocicleta",
         "hobby": "Coleccionista de monedas",
-        "feature": "Cicatriz"
+        "food": "Jamón ibérico",
+        "feature": "Cicatriz en la mejilla"
     },
     {
         "id": "s3",
         "name": "Lola 'La Sombra'",
         "gender": "Femenino",
         "hair": "Rubio",
+        "clothing": "Ropa de cuero negro",
         "vehicle": "Limusina",
         "hobby": "Ajedrez",
-        "feature": "Sombrero"
+        "food": "Tapas",
+        "feature": "Sombrero de ala ancha"
+    },
+    {
+        "id": "s4",
+        "name": "El Barón",
+        "gender": "Masculino",
+        "hair": "Cano",
+        "clothing": "Esmoquin elegante",
+        "vehicle": "Helicóptero privado",
+        "hobby": "Ópera",
+        "food": "Caviar",
+        "feature": "Monóculo dorado"
+    },
+    {
+        "id": "s5",
+        "name": "Marta la Hacker",
+        "gender": "Femenino",
+        "hair": "Azul",
+        "clothing": "Sudadera con capucha",
+        "vehicle": "Patinete eléctrico",
+        "hobby": "Programación",
+        "food": "Bebidas energéticas",
+        "feature": "Tatuaje de código binario"
+    },
+    {
+        "id": "s6",
+        "name": "Don 'Ruedas' Paco",
+        "gender": "Masculino",
+        "hair": "Calvo",
+        "clothing": "Mono de mecánico",
+        "vehicle": "Camión blindado",
+        "hobby": "Tuning",
+        "food": "Bocadillo de calamares",
+        "feature": "Manos siempre manchadas de grasa"
+    },
+    {
+        "id": "s7",
+        "name": "Isabel la Duquesa",
+        "gender": "Femenino",
+        "hair": "Castaño",
+        "clothing": "Vestido de alta costura",
+        "vehicle": "Yate",
+        "hobby": "Arte clásico",
+        "food": "Vino tinto",
+        "feature": "Collar de diamantes"
+    },
+    {
+        "id": "s8",
+        "name": "El Fantasma",
+        "gender": "Masculino",
+        "hair": "Rubio",
+        "clothing": "Camuflaje urbano",
+        "vehicle": "Bicicleta",
+        "hobby": "Parkour",
+        "food": "Churros",
+        "feature": "Siempre lleva mascarilla"
     }
 ]
