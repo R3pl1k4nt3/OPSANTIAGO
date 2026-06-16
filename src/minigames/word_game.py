@@ -46,21 +46,21 @@ class WordGame(ft.Column):
         secret_chars = list(self.secret_word)
         guess_chars = list(guess)
         
-        result_colors = [ft.colors.GREY_700] * self.word_length
-        
+        result_colors = ["#555555"] * self.word_length
+
         # Primero buscamos las coincidencias exactas (Verde)
         for i in range(self.word_length):
             if guess_chars[i] == secret_chars[i]:
-                result_colors[i] = ft.colors.GREEN_600
-                secret_chars[i] = None # Marcamos para no reutilizar
+                result_colors[i] = "#4CAF50"
+                secret_chars[i] = None
                 guess_chars[i] = None
-                
+
         # Luego buscamos letras correctas en posiciones incorrectas (Amarillo)
         for i in range(self.word_length):
             if guess_chars[i] is not None and guess_chars[i] in secret_chars:
-                result_colors[i] = ft.colors.YELLOW_800
-                secret_chars[secret_chars.index(guess_chars[i])] = None # Marcamos para no reutilizar
-                
+                result_colors[i] = "#FFC107"
+                secret_chars[secret_chars.index(guess_chars[i])] = None
+
         # Crear los spans visuales para el historial
         spans = []
         for i in range(self.word_length):

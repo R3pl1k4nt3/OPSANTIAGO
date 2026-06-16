@@ -9,6 +9,7 @@ from core.case_manager import CaseManager
 from minigames.safe_box import SafeBoxGame
 from minigames.word_game import WordGame
 from minigames.sudoku_game import SudokuGame
+from minigames.trivia_game import TriviaGame
 
 def load_data():
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -40,6 +41,11 @@ def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
     cities, suspects, word_list, items_data = load_data()
+
+    trivia_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "trivia.json")
+    with open(trivia_path, "r", encoding="utf-8") as f:
+        trivia_list = json.load(f)
+
     assets_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets")
     game_manager = CaseManager(cities, suspects, items_data, assets_dir)
 
@@ -171,83 +177,112 @@ def main(page: ft.Page):
         page.update()
 
     def investigate_place(place_name):
-        game_manager.consume_time(2) # Investigar cuesta 2 horas de entrada
-        
-        def on_win():
-            clue_data = game_manager.generate_clue(place_name)
-            
-            if clue_data["type"] == "arrest":
-                # Intento de arresto
-                case_info = game_manager.current_case
-                suspect_id = case_info["suspect"]["id"]
-                warrant_id = case_info.get("warrant_issued_for")
-                
-                if warrant_id == suspect_id:
-                    case_info["won"] = True
-                    case_info["is_active"] = False
-                    page.dialog.title = ft.Text("¡MISION CUMPLIDA!", color=ft.colors.GREEN)
-                    page.dialog.content = ft.Text(f"¡{clue_data['content']}\n\nCon tu Orden de Arresto válida, la policía ha atrapado a {case_info['suspect']['name']} y recuperado {case_info['stolen_object']['name']}.")
-                else:
-                    case_info["won"] = False
-                    case_info["is_active"] = False
-                    if not warrant_id:
-                        reason = "No tenías ninguna Orden de Arresto emitida."
+        game_manager.consume_time(2)
+        diff = game_manager.get_difficulty_params()
+        available = game_manager.get_available_minigames()
+
+        MINIGAME_LABELS = {
+            "safe":   ("🔐", "Caja Fuerte",    "Mastermind numérico"),
+            "word":   ("🔤", "Descifrador",    "Tipo Wordle"),
+            "sudoku": ("🔢", "Sudoku",          "Puzzle de números"),
+            "trivia": ("❓", "Interrogatorio", "Pregunta sobre España"),
+        }
+
+        def launch_minigame(game_choice):
+            page.dialog.open = False
+            page.update()
+
+            game_manager.register_minigame_used(game_choice)
+
+            def on_win():
+                game_manager.register_clue_found()
+                clue_data = game_manager.generate_clue(place_name)
+
+                if clue_data["type"] == "arrest":
+                    case_info = game_manager.current_case
+                    suspect_id = case_info["suspect"]["id"]
+                    warrant_id = case_info.get("warrant_issued_for")
+                    if warrant_id == suspect_id:
+                        case_info["won"] = True
+                        case_info["is_active"] = False
+                        result_dlg.title = ft.Text("¡MISIÓN CUMPLIDA!", color="#4CAF50")
+                        result_dlg.content = ft.Text(
+                            f"{clue_data['content']}\n\nCon tu Orden de Arresto válida, la policía ha atrapado a "
+                            f"{case_info['suspect']['name']} y recuperado {case_info['stolen_object']['name']}."
+                        )
                     else:
-                        reason = "Tenías una orden para la persona equivocada."
-                    
-                    page.dialog.title = ft.Text("¡SOSPECHOSO EN FUGA!", color=ft.colors.RED)
-                    page.dialog.content = ft.Text(f"¡{clue_data['content']}\n\nSin embargo, {reason} La policía no pudo detenerle a tiempo y escapó.")
-                
+                        case_info["won"] = False
+                        case_info["is_active"] = False
+                        reason = "No tenías ninguna Orden de Arresto emitida." if not warrant_id else "La orden era para la persona equivocada."
+                        result_dlg.title = ft.Text("¡SOSPECHOSO EN FUGA!", color="#F44336")
+                        result_dlg.content = ft.Text(f"{clue_data['content']}\n\n{reason}")
+                    result_dlg.open = True
+                    page.update()
+                    return
+
+                clue_content = [ft.Text(f'"{clue_data["content"]}"', italic=True)]
+                if clue_data["type"] == "image":
+                    clue_content.append(ft.Image(src=clue_data["image_path"], width=300, height=200, fit=ft.ImageFit.CONTAIN))
+                nueva_diff = game_manager.get_difficulty_params()
+                clue_content.append(ft.Text(f"Dificultad actual: {nueva_diff['label']}", size=11, color=ft.colors.GREY_400))
+
+                result_dlg.title = ft.Text(f"Pista obtenida en {place_name}", color="#4CAF50")
+                result_dlg.content = ft.Column(clue_content, tight=True, spacing=8)
+                result_dlg.open = True
                 page.update()
-                return
 
-            clue_content = []
-            clue_content.append(ft.Text(f'"{clue_data["content"]}"\n\n(Se han consumido 2 horas)'))
-            
-            if clue_data["type"] == "image":
-                clue_content.append(ft.Image(src=clue_data["image_path"], width=300, height=200, fit=ft.ImageFit.CONTAIN))
-            
-            page.dialog.title = ft.Text(f"Testigo en {place_name} (¡ÉXITO!)")
-            page.dialog.content = ft.Column(clue_content, tight=True)
+            def on_lose():
+                result_dlg.title = ft.Text(f"Sin pista en {place_name}", color="#F44336")
+                result_dlg.content = ft.Text("El testigo se negó a hablar. Se han consumido 2 horas.")
+                result_dlg.open = True
+                page.update()
+
+            if game_choice == "safe":
+                minigame = SafeBoxGame(difficulty_digits=diff["safe_digits"], max_attempts=6, on_win=on_win, on_lose=on_lose)
+            elif game_choice == "word":
+                minigame = WordGame(word_list=word_list, word_length=diff["word_len"], max_attempts=6, on_win=on_win, on_lose=on_lose)
+            elif game_choice == "sudoku":
+                minigame = SudokuGame(empty_cells=diff["sudoku_empty"], on_win=on_win, on_lose=on_lose)
+            else:
+                minigame = TriviaGame(trivia_list=trivia_list, difficulty=diff["trivia_d"], on_win=on_win, on_lose=on_lose)
+
+            result_dlg = ft.AlertDialog(
+                modal=True,
+                on_dismiss=lambda e: show_city_screen()
+            )
+            page.overlay.append(result_dlg)
+
+            game_dlg = ft.AlertDialog(
+                title=ft.Text(f"Investigando {place_name}  •  {diff['label']}"),
+                content=minigame,
+                modal=True,
+                on_dismiss=lambda e: show_city_screen()
+            )
+            page.dialog = game_dlg
+            page.dialog.open = True
             page.update()
 
-        def on_lose():
-            page.dialog.title = ft.Text(f"Testigo en {place_name} (FALLO)")
-            page.dialog.content = ft.Text("No has logrado superar el mecanismo. El testigo se ha asustado y no te dirá nada.\n\n(Se han consumido 2 horas)")
-            page.update()
+        # Diálogo de elección de minijuego
+        choice_buttons = []
+        for key in available:
+            icon, name, desc = MINIGAME_LABELS[key]
+            choice_buttons.append(
+                ft.ElevatedButton(
+                    f"{icon}  {name}  —  {desc}",
+                    on_click=lambda e, k=key: launch_minigame(k),
+                    width=360,
+                    style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)),
+                )
+            )
 
-        # Calcular nivel de dificultad (0: Fácil, 1: Medio, 2+: Difícil)
-        city_index = game_manager.current_case["current_city_index"]
-        difficulty_level = min(2, city_index)
-        
-        # Parámetros según dificultad
-        if difficulty_level == 0:
-            safe_digits = 4
-            word_len = 5
-            sudoku_empty = 30
-        elif difficulty_level == 1:
-            safe_digits = 5
-            word_len = 6
-            sudoku_empty = 45
-        else:
-            safe_digits = 6
-            word_len = 7
-            sudoku_empty = 52
-
-        # Elegir minijuego al azar entre los 3 disponibles
-        game_choice = random.choice(["safe", "word", "sudoku"])
-        
-        if game_choice == "safe":
-            minigame = SafeBoxGame(difficulty_digits=safe_digits, max_attempts=5, on_win=on_win, on_lose=on_lose)
-        elif game_choice == "word":
-            minigame = WordGame(word_list=word_list, word_length=word_len, max_attempts=6, on_win=on_win, on_lose=on_lose)
-        else:
-            minigame = SudokuGame(empty_cells=sudoku_empty, on_win=on_win, on_lose=on_lose)
-        
         page.dialog = ft.AlertDialog(
-            title=ft.Text(f"Investigando {place_name}..."),
-            content=minigame,
-            on_dismiss=lambda e: show_city_screen()
+            title=ft.Text(f"¿Qué desafío aceptas en {place_name}?"),
+            content=ft.Column(
+                [ft.Text(f"Dificultad: {diff['label']}  •  2 horas ya consumidas", size=12, color=ft.colors.GREY_400)]
+                + choice_buttons,
+                tight=True, spacing=10,
+            ),
+            on_dismiss=lambda e: show_city_screen(),
         )
         page.dialog.open = True
         page.update()

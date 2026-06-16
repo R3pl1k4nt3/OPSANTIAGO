@@ -28,12 +28,14 @@ class CaseManager:
             "suspect": suspect,
             "stolen_object": stolen_object,
             "weapon": weapon,
-            "route": route,         # La lista de ciudades en orden
-            "current_city_index": 0, # Empieza en la primera ciudad de la ruta
+            "route": route,
+            "current_city_index": 0,
             "remaining_hours": start_hours,
             "warrant_issued_for": None,
             "is_active": True,
-            "won": False
+            "won": False,
+            "clues_found": 0,
+            "city_minigames_used": [],
         }
         return self.current_case
 
@@ -49,15 +51,35 @@ class CaseManager:
             return self.current_case["route"][idx]
         return None
 
+    def get_available_minigames(self):
+        all_types = ["safe", "word", "sudoku", "trivia"]
+        used = self.current_case.get("city_minigames_used", [])
+        available = [t for t in all_types if t not in used]
+        return available if available else all_types
+
+    def register_minigame_used(self, minigame_type):
+        self.current_case["city_minigames_used"].append(minigame_type)
+
+    def register_clue_found(self):
+        self.current_case["clues_found"] = self.current_case.get("clues_found", 0) + 1
+
+    def get_difficulty_params(self):
+        clues = self.current_case.get("clues_found", 0)
+        if clues < 2:
+            return {"safe_digits": 3, "word_len": 5, "sudoku_empty": 25, "trivia_d": 1, "label": "Fácil"}
+        elif clues < 4:
+            return {"safe_digits": 4, "word_len": 5, "sudoku_empty": 35, "trivia_d": 1, "label": "Normal"}
+        elif clues < 7:
+            return {"safe_digits": 5, "word_len": 6, "sudoku_empty": 45, "trivia_d": 2, "label": "Difícil"}
+        else:
+            return {"safe_digits": 6, "word_len": 7, "sudoku_empty": 52, "trivia_d": 3, "label": "Experto"}
+
     def travel_to(self, city_id):
-        # Al viajar consumimos tiempo
-        self.consume_time(8) # 8 horas de viaje por defecto
-        
+        self.consume_time(8)
         next_correct_city = self.get_next_city()
-        
-        # Si la ciudad elegida es la correcta en la ruta
         if next_correct_city and next_correct_city["id"] == city_id:
             self.current_case["current_city_index"] += 1
+            self.current_case["city_minigames_used"] = []  # reset per city
             return True, "Has seguido el rastro correctamente."
         else:
             return False, "Has perdido el rastro. El sospechoso no está por aquí."
