@@ -1,19 +1,19 @@
 {
     "stolen_objects": [
-        "El Cáliz de Doña Urraca",
-        "El Códice Calixtino Original",
-        "La Tizona (Espada del Cid)",
-        "El Diamante 'Ojo del Mar'",
-        "Los Planos del Submarino de Peral",
-        "El Cuadro Desaparecido de Velázquez",
-        "El Tesoro del Carambolo"
+        {"id": "caliz_dona_urraca",      "name": "El Cáliz de Doña Urraca"},
+        {"id": "codice_calixtino",       "name": "El Códice Calixtino Original"},
+        {"id": "la_tizona",              "name": "La Tizona (Espada del Cid)"},
+        {"id": "diamante_ojo_del_mar",   "name": "El Diamante 'Ojo del Mar'"},
+        {"id": "planos_submarino_peral", "name": "Los Planos del Submarino de Peral"},
+        {"id": "cuadro_velazquez",       "name": "El Cuadro Desaparecido de Velázquez"},
+        {"id": "tesoro_carambolo",       "name": "El Tesoro del Carambolo"}
     ],
     "weapons": [
-        "Candelabro de Plata Maciza",
-        "Daga de Acero Toledano",
-        "Veneno de Cicuta Modificado",
-        "Cuerda de Piano de Alta Tensión",
-        "Pistola con Silenciador del Calibre 22",
-        "Estatuilla de Bronce Contundente"
+        {"id": "candelabro_plata",    "name": "Candelabro de Plata Maciza"},
+        {"id": "daga_toledana",       "name": "Daga de Acero Toledano"},
+        {"id": "veneno_cicuta",       "name": "Veneno de Cicuta Modificado"},
+        {"id": "cuerda_piano",        "name": "Cuerda de Piano de Alta Tensión"},
+        {"id": "pistola_silenciador", "name": "Pistola con Silenciador del Calibre 22"},
+        {"id": "estatuilla_bronce",   "name": "Estatuilla de Bronce Contundente"}
     ]
 }

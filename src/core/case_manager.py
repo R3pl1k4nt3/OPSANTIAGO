@@ -17,7 +17,7 @@ class CaseManager:
         suspect = random.choice(self.all_suspects)
         
         # 1.5 Seleccionar botín y arma
-        stolen_object = random.choice(self.all_items["stolen_objects"])
+        stolen_object = random.choice(self.all_items["stolen_objects"])  # {"id": ..., "name": ...}
         weapon = random.choice(self.all_items["weapons"])
 
         # 2. Generar una ruta aleatoria (ej. Madrid -> Sevilla -> Zaragoza)
@@ -73,43 +73,78 @@ class CaseManager:
         if self.current_case:
             self.current_case["warrant_issued_for"] = suspect_id
 
+    def _get_witness_intro(self, place_name):
+        """Returns a witness persona appropriate for the investigation location."""
+        place_lower = place_name.lower()
+        if any(w in place_lower for w in ["museo", "prado", "escultura", "arte", "botín"]):
+            return random.choice(["El conservador de sala", "Una restauradora", "Un guía turístico"])
+        if any(w in place_lower for w in ["catedral", "iglesia", "sinagoga", "basílica", "templo", "capilla"]):
+            return random.choice(["El sacristán", "Una turista devota", "El guarda del templo"])
+        if any(w in place_lower for w in ["playa", "malvarrosa", "canteras", "sardinero"]):
+            return random.choice(["Un socorrista", "La dueña del chiringuito", "Un bañista"])
+        if any(w in place_lower for w in ["mercado", "abastos", "laurel"]):
+            return random.choice(["Un pescadero", "La encargada del puesto", "Un camarero del bar"])
+        if any(w in place_lower for w in ["palacio", "alcázar", "castillo", "ciudadela"]):
+            return random.choice(["Un guardia de seguridad", "La guía oficial del recinto", "Un fotógrafo"])
+        if any(w in place_lower for w in ["parque", "retiro", "verde", "jardín"]):
+            return random.choice(["Un guardia del parque", "Una corredora habitual", "El quiosquero"])
+        if any(w in place_lower for w in ["teatro", "campoamor", "ópera"]):
+            return random.choice(["Un tramoyista", "La acomodadora", "Un músico de la orquesta"])
+        if any(w in place_lower for w in ["rambla", "plaza", "obradoiro", "castillo", "virgen blanca"]):
+            return random.choice(["Un vendedor ambulante", "Un artista callejero", "Una vecina del barrio"])
+        return random.choice(["Un testigo", "Una persona del lugar", "Un viandante"])
+
     def generate_clue(self, location_type):
         next_city = self.get_next_city()
         suspect = self.current_case["suspect"]
-        
+        witness = self._get_witness_intro(location_type)
+
         if next_city:
-            # 70% probabilidad de pista sobre el destino, 30% sobre el sospechoso
+            place_ref = random.choice(next_city['places'])
+
             if random.random() < 0.7:
                 if random.random() < 0.5:
-                    clues = [
-                        f"Me dijo que quería ir a ver {next_city['places'][0]}.",
-                        f"Llevaba un billete hacia {next_city['region']}.",
-                        f"Mencionó que le encantaba la ciudad de {next_city['name']}."
+                    destination_clues = [
+                        f"{witness} recuerda haberle oído mencionar que tenía «asuntos pendientes» en {next_city['name']}.",
+                        f"Según {witness.lower()}, preguntó cómo llegar a {place_ref}.",
+                        f"{witness} vio cómo compraba una guía turística de {next_city['region']}.",
+                        f"«Habló de {next_city['name']} como si ya hubiese estado antes», cuenta {witness.lower()}.",
+                        f"{witness} oyó que buscaba alojamiento cerca de {place_ref}.",
+                        f"«Llevaba un billete de tren con destino a {next_city['region']}», afirma {witness.lower()}.",
+                        f"{witness} recuerda que consultó el mapa y señaló {next_city['name']} con el dedo.",
                     ]
-                    return {"type": "text", "content": random.choice(clues)}
+                    return {"type": "text", "content": random.choice(destination_clues)}
                 else:
-                    # Determinar la extensión correcta de la imagen (jpg, png, jpeg)
                     city_img_name = f"{next_city['id']}.jpg"
                     for ext in [".jpg", ".png", ".jpeg", ".JPG", ".PNG", ".JPEG"]:
                         img_path = os.path.join(self.assets_dir, "images", "cities", f"{next_city['id']}{ext}")
                         if os.path.exists(img_path):
                             city_img_name = f"{next_city['id']}{ext}"
                             break
-                            
+                    image_clues = [
+                        f"{witness} encontró esta fotografía en el suelo, justo donde estuvo sentado.",
+                        f"«Me enseñó esta imagen y me preguntó si sabía cómo llegar», relata {witness.lower()}.",
+                        f"{witness} vio que tenía esta foto guardada en la pantalla del teléfono.",
+                    ]
                     return {
                         "type": "image",
-                        "content": "Me enseñó esta fotografía y me preguntó cómo llegar a este lugar...",
+                        "content": random.choice(image_clues),
                         "image_path": f"images/cities/{city_img_name}"
                     }
             else:
-                traits = [
-                    f"Me fijé en que tenía el pelo {suspect['hair']}.",
-                    f"Iba vestido con {suspect['clothing']}.",
-                    f"Hablaba sin parar sobre su afición: {suspect['hobby']}.",
-                    f"Estaba comiendo {suspect['food']} compulsivamente.",
-                    f"Me llamó la atención su {suspect['feature']}."
+                trait_clues = [
+                    f"{witness} se fijó en su llamativo pelo {suspect['hair']}.",
+                    f"«Llevaba {suspect['clothing']} y no pasaba desapercibido», dice {witness.lower()}.",
+                    f"{witness} recuerda que hablaba con entusiasmo sobre el {suspect['hobby']}.",
+                    f"«Pidió {suspect['food']} y lo devoró en segundos», cuenta {witness.lower()}.",
+                    f"{witness} no pudo evitar fijarse en su {suspect['feature']}.",
+                    f"«Se marchó en {suspect['vehicle']}; lo vi arrancar desde aquí mismo», afirma {witness.lower()}.",
                 ]
-                return {"type": "text", "content": random.choice(traits)}
+                return {"type": "text", "content": random.choice(trait_clues)}
         else:
-            # Es la última ciudad de la ruta, aquí se atrapa al sospechoso
-            return {"type": "arrest", "content": "¡ESTÁ AQUÍ! ¡Le veo corriendo por el callejón!"}
+            arrest_lines = [
+                "¡ESTÁ AQUÍ! ¡Le veo intentando mezclarse con la multitud!",
+                "¡Ahí está! ¡Está saliendo por la puerta trasera!",
+                "¡El sospechoso está en el edificio! ¡No hay salida!",
+            ]
+            return {"type": "arrest", "content": random.choice(arrest_lines)}

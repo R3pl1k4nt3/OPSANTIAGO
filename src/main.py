@@ -88,8 +88,8 @@ def main(page: ft.Page):
                     [
                         ft.Column([
                             ft.Text("DATOS DEL CASO:", weight=ft.FontWeight.BOLD, size=12, color=ft.colors.GREY_400),
-                            ft.Text(f"Botín: {case_info.get('stolen_object')}", size=14),
-                            ft.Text(f"Arma: {case_info.get('weapon')}", size=14),
+                            ft.Text(f"Botín: {case_info['stolen_object']['name']}", size=14),
+                            ft.Text(f"Arma: {case_info['weapon']['name']}", size=14),
                         ]),
                         ft.Container(expand=True),
                         ft.Column([
@@ -186,7 +186,7 @@ def main(page: ft.Page):
                     case_info["won"] = True
                     case_info["is_active"] = False
                     page.dialog.title = ft.Text("¡MISION CUMPLIDA!", color=ft.colors.GREEN)
-                    page.dialog.content = ft.Text(f"¡{clue_data['content']}\n\nCon tu Orden de Arresto válida, la policía ha atrapado a {case_info['suspect']['name']}.")
+                    page.dialog.content = ft.Text(f"¡{clue_data['content']}\n\nCon tu Orden de Arresto válida, la policía ha atrapado a {case_info['suspect']['name']} y recuperado {case_info['stolen_object']['name']}.")
                 else:
                     case_info["won"] = False
                     case_info["is_active"] = False
@@ -232,7 +232,7 @@ def main(page: ft.Page):
         else:
             safe_digits = 6
             word_len = 7
-            sudoku_empty = 60
+            sudoku_empty = 52
 
         # Elegir minijuego al azar entre los 3 disponibles
         game_choice = random.choice(["safe", "word", "sudoku"])
